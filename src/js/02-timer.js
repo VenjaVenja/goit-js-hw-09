@@ -17,7 +17,7 @@ refs.btnStart.disabled = true;
 let userDate = null;
 
 function pad(valeu) {
-    return String(valeu).padEnd(2, '0');
+    return String(valeu).padStart(2, '0');
 };
 
 function convertMs(ms) {
@@ -28,13 +28,13 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = pad(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours = pad(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes = pad(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 };
@@ -59,13 +59,56 @@ const options = {
   },
 };
 
+class Timer {
+    constructor({onTick}) {
+        this.intervalId = null;
+        this.isActive = false;
+        this.onTick = onTick;
+        refs.btnStart.disabled = true;
+    }
+
+     timerStart() {
+        if (this.isActive) {
+            return;
+        }
+         
+         this.isActive = true;
+         refs.btnStart.disabled = true;
+        this.intervalId = setInterval(() => {
+            const currentTime = Date.now();
+            const deltaTime = userDate - currentTime;
+            const time = convertMs(deltaTime);
+
+            this.onTick(time)
+            if (deltaTime <= 0) {
+                this.timerStop();
+            }
+        }, 1000);
+     }
+    timerStop() {
+        Notify.success('Time is over');
+        clearInterval(this.intervalId);
+        refs.btnStart.disabled = true;
+        this.isActive = false;
+        const time = convertMs(0);
+        this.onTick(time);
+    }
+}
+
+const timer = new Timer({
+    onTick: updateTimerCounter
+});
+
 flatpickr("#datetime-picker", options);
 
-// console.dir(flatpickr);
+refs.btnStart.addEventListener('click', timer.timerStart.bind(timer));
 
-// refs.input.addEventListener('input');
-
-// refs.btnStart.addEventListener('click', onStartBtnClick);
+function updateTimerCounter({ days, hours, minutes, seconds }) {
+    refs.days.textContent = (`${days}`);
+    refs.hours.textContent = (`${hours}`);
+    refs.minutes.textContent = (`${minutes}`);
+    refs.seconds.textContent = (`${seconds}`);
+};
 
 
 
