@@ -52,7 +52,7 @@ const options = {
           Notify.failure('Please choose a date in the future');
           userDate = new Date();
       } else {
-          Notify.success('Press START! Let`s start countdown!');
+          Notify.success('Press START! Let`s countdown start!');
           refs.btnStart.disabled = false;
           userDate = selectedDates[0];
       }
