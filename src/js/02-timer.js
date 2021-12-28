@@ -1,6 +1,7 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import '../css/timer.css';
 
 const refs = {
     input: document.querySelector('#datetime-picker'),
@@ -11,8 +12,6 @@ const refs = {
     minutes: document.querySelector('span[data-minutes]'),
     seconds: document.querySelector('span[data-seconds]')
 };
-
-refs.btnStart.disabled = true;
 
 let userDate = null;
 
@@ -53,6 +52,7 @@ const options = {
           Notify.failure('Please choose a date in the future');
           userDate = new Date();
       } else {
+          Notify.success('Press START! Let`s start countdown!');
           refs.btnStart.disabled = false;
           userDate = selectedDates[0];
       }
