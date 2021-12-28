@@ -15,7 +15,7 @@ const refs = {
 
 let userDate = null;
 
-function pad(valeu) {
+function addLeadingZero(valeu) {
     return String(valeu).padStart(2, '0');
 };
 
@@ -27,13 +27,13 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = pad(Math.floor(ms / day));
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = pad(Math.floor((ms % day) / hour));
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = pad(Math.floor(((ms % day) % hour) / minute));
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
+  const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 };
@@ -68,7 +68,8 @@ class Timer {
     }
 
      timerStart() {
-        if (this.isActive) {
+         if (this.isActive) {
+            Notify.failure('Sorry, you have to reload the page');
             return;
         }
          
